@@ -4,7 +4,7 @@ import (
 	"context"
 	"io/ioutil"
 
-	"github.com/gernest/matrixid/embed"
+	"github.com/gernest/sydent-go/embed"
 	"github.com/gernest/sydent-go/models"
 )
 

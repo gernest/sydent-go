@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	_ "github.com/gernest/matrixid/embed/statik"
+	_ "github.com/gernest/sydent-go/embed/statik"
 	"github.com/rakyll/statik/fs"
 )
 

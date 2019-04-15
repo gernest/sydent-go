@@ -12,7 +12,7 @@ import (
 	"github.com/gernest/sydent-go/config"
 
 	"github.com/gernest/sydent-go/core"
-	"github.com/gernest/matrixid/embed"
+	"github.com/gernest/sydent-go/embed"
 	"github.com/gernest/sydent-go/logger"
 	"github.com/gernest/sydent-go/store"
 	"github.com/gernest/sydent-go/store/query"

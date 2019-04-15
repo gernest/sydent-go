@@ -12,7 +12,7 @@ import (
 	"text/template"
 
 	"github.com/cenkalti/backoff"
-	"github.com/gernest/matrixid/embed"
+	"github.com/gernest/sydent-go/embed"
 	"github.com/gernest/sydent-go/logger"
 
 	"github.com/hashicorp/hcl"

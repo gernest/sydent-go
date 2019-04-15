@@ -3,7 +3,7 @@ package config
 import (
 	"testing"
 
-	"github.com/gernest/matrixid/embed"
+	"github.com/gernest/sydent-go/embed"
 )
 
 func TestEmbedEmailtemplates(t *testing.T) {
