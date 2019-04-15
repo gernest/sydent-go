@@ -1,4 +1,4 @@
-package matrixid
+package service
 
 import (
 	"database/sql"

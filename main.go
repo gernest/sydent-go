@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gernest/sydent-go/matrixid"
+	"github.com/gernest/sydent-go/service"
 	"github.com/gernest/sydent-go/store"
 	"github.com/prometheus/client_golang/prometheus"
 
@@ -99,8 +99,8 @@ func id() cli.Command {
 			}
 			opts.Email = mail
 			opts.Store = storage
-			m := matrixid.NewMetric()
-			e := matrixid.Service(opts.Namespace("matrixid"), m)
+			m := service.NewMetric()
+			e := service.Service(opts.Namespace("matrixid"), m)
 			lg.Info("statring matrix identity service", zap.String("address", c.Server.Address()))
 			return http.ListenAndServe(c.Server.Address(), e)
 		},

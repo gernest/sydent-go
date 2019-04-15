@@ -1,4 +1,4 @@
-package matrixid
+package service
 
 import (
 	"net/http"

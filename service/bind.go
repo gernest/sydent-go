@@ -1,12 +1,12 @@
-package matrixid
+package service
 
 import (
 	"context"
 	"database/sql"
 
+	"github.com/gernest/signedjson"
 	"github.com/gernest/sydent-go/core"
 	"github.com/gernest/sydent-go/models"
-	"github.com/gernest/signedjson"
 )
 
 const associationLifetime = 100 * 365 * 24 * 60 * 60 * 1000
