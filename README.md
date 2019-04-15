@@ -1,2 +1,1 @@
-# sydent-go
-matrix identity service in Go
+ port of sydent to go using postgres as the data store
