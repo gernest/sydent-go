@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS invite_tokens;
+DROP TABLE IF EXISTS ephemeral_public_keys;
+DROP TABLE IF EXISTS peer_pubkeys;
+DROP TABLE IF EXISTS peers;
+DROP TABLE IF EXISTS invite_tokens;
+DROP TABLE IF EXISTS local_threepid_associations;
+DROP TABLE IF EXISTS global_threepid_associations;
+DROP TABLE IF EXISTS threepid_token_auths;
+DROP TABLE IF EXISTS threepid_validation_sessions;

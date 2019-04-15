@@ -11,6 +11,8 @@ require (
 	github.com/lib/pq v1.1.0
 	github.com/prometheus/client_golang v0.9.3-0.20190127221311-3c4408c8b829
 	github.com/prometheus/client_model v0.0.0-20190129233127-fd36f4220a90
+	github.com/rakyll/statik v0.1.5
 	github.com/rodaine/hclencoder v0.0.0-20190213202847-fb9757bb536e
+	github.com/urfave/cli v1.20.0
 	go.uber.org/zap v1.9.1
 )
