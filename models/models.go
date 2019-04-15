@@ -5,33 +5,6 @@ import (
 	"time"
 )
 
-// common http verbs
-const (
-	Get         = "GET"
-	Post        = "POST"
-	Put         = "Put"
-	Options     = "OPTIONS"
-	Delete      = "DELETE"
-	ContentType = "Content-Type"
-	ContentJSON = "application/json"
-)
-
-// ContextKey keys used by all services
-type ContextKey uint
-
-// context keys used by all services
-const (
-
-	// Logs
-	CtxLogSilent ContextKey = iota
-	CtxLogBase
-	CtxLogIdentity
-	CtxLogAccount
-
-	// Databases
-	CtxStore
-)
-
 type InviteToken struct {
 	ID         int64
 	Medium     string
