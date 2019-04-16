@@ -39,7 +39,6 @@ type Store interface {
 	GetValidatedSession(ctx context.Context, sid int64, clientSecret string) (*models.ValidationSession, error)
 
 	DB() models.SQL
-	Driver() Driver
 	Metric() Metric
 }
 
@@ -47,15 +46,13 @@ type Store interface {
 type Matrix struct {
 	*Identity
 	db      models.SQL
-	driver  Driver
 	metrics Metric
 }
 
-func NewStore(db models.SQL, driver Driver, m Metric) *Matrix {
+func NewStore(db models.SQL, m Metric) *Matrix {
 	return &Matrix{
-		Identity: New(db, driver, m),
+		Identity: New(db, m),
 		db:       db,
-		driver:   driver,
 		metrics:  m,
 	}
 }
@@ -64,54 +61,6 @@ func (m *Matrix) DB() models.SQL {
 	return m.db
 }
 
-func (m *Matrix) Driver() Driver {
-	return m.driver
-}
-
 func (m *Matrix) Metric() Metric {
 	return m.metrics
-}
-
-// Driver defines methods for retrieving sql query strings used by the identity
-// service.
-type Driver interface {
-	Name() string
-
-	// Param returns a string representing positional parameter. Different
-	// databases offers different ways to do this.
-	//
-	// For instance in postgres you can use $1 to mark first argument and ? is used
-	// for sqlite
-	Param(index int) string
-
-	StoreToken() string
-	GetTokens() string
-	MarkTokensAsSent() string
-	StoreEphemeralPublicKey() string
-	ValidateEphemeralPublicKey() string
-	GetSenderForToken() string
-
-	SignedAssociationStringForThreepid() string
-	GlobalGetMxid() string
-	GlobalGetMxids() string
-	GlobalRemoveAssociation() string
-	GlobalAddAssociation() string
-
-	GetPeerByName() string
-	GetAllPeers() string
-	SetLastSentVersionAndPokeSucceeded() string
-	SetSendAttemptNumber() string
-	SetValidated() string
-	SetMtime() string
-	GetSessionByID() string
-	GetTokenSessionByID() string
-	GlobalLastIDFromServer() string
-	LocalAddOrUpdateAssociation() string
-	GetTokenSession() string
-	CreateTokenSession() string
-	AddValidationSession() string
-	GetAssociationsAfterId() string
-	GetLocal3pid() string
-	LocalRemoveAssociation() string
-	CreateTMPMxid() string
 }

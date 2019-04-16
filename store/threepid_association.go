@@ -6,16 +6,17 @@ import (
 	"time"
 
 	"github.com/gernest/sydent-go/models"
+	"github.com/gernest/sydent-go/store/query"
 )
 
-func LocalAddOrUpdateAssociation(ctx context.Context, driver Driver, db models.Query, as *models.Association) error {
-	_, err := db.ExecContext(ctx, driver.LocalAddOrUpdateAssociation(),
+func LocalAddOrUpdateAssociation(ctx context.Context, db models.Query, as *models.Association) error {
+	_, err := db.ExecContext(ctx, query.LocalAddOrUpdateAssociation,
 		as.Medium, as.Address, as.MatrixID, as.Timestamp, as.NotBefore, as.NotAfter)
 	return err
 }
 
-func GetAssociationsAfterID(ctx context.Context, driver Driver, db models.Query, afterID int64, limit int64) ([]models.Association, error) {
-	rows, err := db.QueryContext(ctx, driver.GetAssociationsAfterId(), afterID, limit)
+func GetAssociationsAfterID(ctx context.Context, db models.Query, afterID int64, limit int64) ([]models.Association, error) {
+	rows, err := db.QueryContext(ctx, query.GetAssociationsAfterId, afterID, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -40,50 +41,50 @@ func GetAssociationsAfterID(ctx context.Context, driver Driver, db models.Query,
 	return ass, nil
 }
 
-func LocalRemoveAssociation(ctx context.Context, driver Driver, db models.Query, as *models.Association) error {
+func LocalRemoveAssociation(ctx context.Context, db models.Query, as *models.Association) error {
 	var count int64
 	err := db.QueryRowContext(ctx,
-		driver.GetLocal3pid(), as.Medium, as.Address, as.MatrixID).Scan(&count)
+		query.GetLocal3pid, as.Medium, as.Address, as.MatrixID).Scan(&count)
 	if err != nil {
 		return err
 	}
 	if count > 0 {
 		now := time.Now()
 		ts := models.MS(&now)
-		_, err = db.ExecContext(ctx, driver.LocalRemoveAssociation(), as.Medium, as.Address, ts)
+		_, err = db.ExecContext(ctx, query.LocalRemoveAssociation, as.Medium, as.Address, ts)
 		return err
 	}
 	return nil
 }
 
-func SignedAssociationStringForThreepid(ctx context.Context, driver Driver, db models.Query, medium, address string) (string, error) {
+func SignedAssociationStringForThreepid(ctx context.Context, db models.Query, medium, address string) (string, error) {
 	now := time.Now()
 	ts := models.MS(&now)
 	var signed string
-	err := db.QueryRowContext(ctx, driver.SignedAssociationStringForThreepid(), medium, address, ts, ts).Scan(&signed)
+	err := db.QueryRowContext(ctx, query.SignedAssociationStringForThreepid, medium, address, ts, ts).Scan(&signed)
 	if err != nil {
 		return "", err
 	}
 	return signed, nil
 }
 
-func GlobalGetMxid(ctx context.Context, driver Driver, db models.Query, medium, address string) (string, error) {
+func GlobalGetMxid(ctx context.Context, db models.Query, medium, address string) (string, error) {
 	now := time.Now()
 	ts := models.MS(&now)
 	var signed string
-	err := db.QueryRowContext(ctx, driver.GlobalGetMxid(), medium, address, ts, ts).Scan(&signed)
+	err := db.QueryRowContext(ctx, query.GlobalGetMxid, medium, address, ts, ts).Scan(&signed)
 	if err != nil {
 		return "", err
 	}
 	return signed, nil
 }
 
-func GlobalGetMxids(ctx context.Context, driver Driver, db models.Query, ids [][]string) ([]models.Association, error) {
+func GlobalGetMxids(ctx context.Context, db models.Query, ids [][]string) ([]models.Association, error) {
 	tx, err := db.(models.SQL).BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
-	_, err = tx.ExecContext(ctx, driver.CreateTMPMxid())
+	_, err = tx.ExecContext(ctx, query.CreateTMPMxid)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
@@ -107,7 +108,7 @@ func GlobalGetMxids(ctx context.Context, driver Driver, db models.Query, ids [][
 	}
 	now := time.Now()
 	ts := models.MS(&now)
-	rows, err := tx.QueryContext(ctx, driver.GlobalGetMxids(), ts, ts)
+	rows, err := tx.QueryContext(ctx, query.GlobalGetMxids, ts, ts)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
@@ -159,22 +160,22 @@ func genValues(args [][]string) (string, []interface{}) {
 	return s, r
 }
 
-func GlobalAddAssociation(ctx context.Context, driver Driver, db models.Query, as *models.Association, originServer string, originID int64, rawSgnAssoc string) error {
-	_, err := db.ExecContext(ctx, driver.GlobalAddAssociation(), as.Medium, as.Address, as.MatrixID,
+func GlobalAddAssociation(ctx context.Context, db models.Query, as *models.Association, originServer string, originID int64, rawSgnAssoc string) error {
+	_, err := db.ExecContext(ctx, query.GlobalAddAssociation, as.Medium, as.Address, as.MatrixID,
 		as.Timestamp, as.NotBefore, as.NotAfter, originServer, originID, rawSgnAssoc)
 	return err
 }
 
-func GlobalLastIDFromServer(ctx context.Context, driver Driver, db models.Query, originServer string) (int64, error) {
+func GlobalLastIDFromServer(ctx context.Context, db models.Query, originServer string) (int64, error) {
 	var originID int64
-	err := db.QueryRowContext(ctx, driver.GlobalLastIDFromServer(), originServer).Scan(&originID)
+	err := db.QueryRowContext(ctx, query.GlobalLastIDFromServer, originServer).Scan(&originID)
 	if err != nil {
 		return 0, err
 	}
 	return originID, nil
 }
 
-func GlobalRemoveAssociation(ctx context.Context, driver Driver, db models.Query, medium, address string) error {
-	_, err := db.ExecContext(ctx, driver.GlobalRemoveAssociation(), medium, address)
+func GlobalRemoveAssociation(ctx context.Context, db models.Query, medium, address string) error {
+	_, err := db.ExecContext(ctx, query.GlobalRemoveAssociation, medium, address)
 	return err
 }

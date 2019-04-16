@@ -6,11 +6,12 @@ import (
 
 	"github.com/gernest/sydent-go/config"
 	"github.com/gernest/sydent-go/models"
+	"github.com/gernest/sydent-go/store/query"
 )
 
-func GetOrCreateTokenSession(ctx context.Context, driver Driver, db models.Query, medium, address, clientSecret string) (*models.ValidationSession, error) {
+func GetOrCreateTokenSession(ctx context.Context, db models.Query, medium, address, clientSecret string) (*models.ValidationSession, error) {
 	var v models.ValidationSession
-	err := db.QueryRowContext(ctx, driver.GetTokenSession(), medium, address, clientSecret).Scan(
+	err := db.QueryRowContext(ctx, query.GetTokenSession, medium, address, clientSecret).Scan(
 		&v.ID,
 		&v.Medium,
 		&v.Address,
@@ -22,12 +23,12 @@ func GetOrCreateTokenSession(ctx context.Context, driver Driver, db models.Query
 	)
 	if err == sql.ErrNoRows {
 		mtime := models.Time()
-		sid, err := AddValidationSession(ctx, driver, db, medium, address, clientSecret, mtime)
+		sid, err := AddValidationSession(ctx, db, medium, address, clientSecret, mtime)
 		if err != nil {
 			return nil, err
 		}
 		tokenString := models.GenerateToken(medium)
-		_, err = db.ExecContext(ctx, driver.CreateTokenSession(), sid, tokenString, -1)
+		_, err = db.ExecContext(ctx, query.CreateTokenSession, sid, tokenString, -1)
 		if err != nil {
 			return nil, err
 		}
@@ -43,33 +44,33 @@ func GetOrCreateTokenSession(ctx context.Context, driver Driver, db models.Query
 	return &v, nil
 }
 
-func AddValidationSession(ctx context.Context, driver Driver, db models.Query, medium, address, clientSecret string, mtime int64) (int64, error) {
+func AddValidationSession(ctx context.Context, db models.Query, medium, address, clientSecret string, mtime int64) (int64, error) {
 	var id int64
-	err := db.QueryRowContext(ctx, driver.AddValidationSession(), medium, address, clientSecret, mtime).Scan(&id)
+	err := db.QueryRowContext(ctx, query.AddValidationSession, medium, address, clientSecret, mtime).Scan(&id)
 	if err != nil {
 		return 0, err
 	}
 	return id, nil
 }
 
-func SetSendAttemptNumber(ctx context.Context, driver Driver, db models.Query, sid int64, attemptNo int64) error {
-	_, err := db.ExecContext(ctx, driver.SetSendAttemptNumber(), attemptNo, sid)
+func SetSendAttemptNumber(ctx context.Context, db models.Query, sid int64, attemptNo int64) error {
+	_, err := db.ExecContext(ctx, query.SetSendAttemptNumber, attemptNo, sid)
 	return err
 }
 
-func SetValidated(ctx context.Context, driver Driver, db models.Query, sid string, validated int) error {
-	_, err := db.ExecContext(ctx, driver.SetValidated(), validated, sid)
+func SetValidated(ctx context.Context, db models.Query, sid string, validated int) error {
+	_, err := db.ExecContext(ctx, query.SetValidated, validated, sid)
 	return err
 }
 
-func SetMtime(ctx context.Context, driver Driver, db models.Query, sid int64, mtime int64) error {
-	_, err := db.ExecContext(ctx, driver.SetMtime(), mtime, sid)
+func SetMtime(ctx context.Context, db models.Query, sid int64, mtime int64) error {
+	_, err := db.ExecContext(ctx, query.SetMtime, mtime, sid)
 	return err
 }
 
-func GetSessionByID(ctx context.Context, driver Driver, db models.Query, sid int64) (*models.ValidationSession, error) {
+func GetSessionByID(ctx context.Context, db models.Query, sid int64) (*models.ValidationSession, error) {
 	var v models.ValidationSession
-	err := db.QueryRowContext(ctx, driver.GetSessionByID(), sid).Scan(
+	err := db.QueryRowContext(ctx, query.GetSessionByID, sid).Scan(
 		&v.ID,
 		&v.Medium,
 		&v.Address,
@@ -83,9 +84,9 @@ func GetSessionByID(ctx context.Context, driver Driver, db models.Query, sid int
 	return &v, err
 }
 
-func GetTokenSessionByID(ctx context.Context, driver Driver, db models.Query, sid int64) (*models.TokenSession, error) {
+func GetTokenSessionByID(ctx context.Context, db models.Query, sid int64) (*models.TokenSession, error) {
 	var v models.TokenSession
-	err := db.QueryRowContext(ctx, driver.GetTokenSessionByID(), sid).Scan(
+	err := db.QueryRowContext(ctx, query.GetTokenSessionByID, sid).Scan(
 		&v.ID,
 		&v.Medium,
 		&v.Address,
@@ -102,8 +103,8 @@ func GetTokenSessionByID(ctx context.Context, driver Driver, db models.Query, si
 }
 
 // GetValidatedSession returns a validated session with ma matching clientSecret
-func GetValidatedSession(ctx context.Context, driver Driver, db models.Query, sid int64, clientSecret string) (*models.ValidationSession, error) {
-	sess, err := GetSessionByID(ctx, driver, db, sid)
+func GetValidatedSession(ctx context.Context, db models.Query, sid int64, clientSecret string) (*models.ValidationSession, error) {
+	sess, err := GetSessionByID(ctx, db, sid)
 	if err != nil {
 		return nil, err
 	}

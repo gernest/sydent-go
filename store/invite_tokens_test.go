@@ -12,7 +12,7 @@ func testInvites(t *testing.T, ctx TestContext) {
 	}
 	t.Run("StoreToken", func(ts *testing.T) {
 		for _, v := range sampleTokens {
-			err := StoreToken(ctx.Ctx, ctx.Driver, ctx.Query, v)
+			err := StoreToken(ctx.Ctx, ctx.Query, v)
 			if err != nil {
 				ts.Error(err)
 			}
@@ -20,7 +20,7 @@ func testInvites(t *testing.T, ctx TestContext) {
 	})
 	t.Run("GetTokens", func(ts *testing.T) {
 		a := sampleTokens[0]
-		tkn, err := GetTokens(ctx.Ctx, ctx.Driver, ctx.Query, a.Medium, a.Address)
+		tkn, err := GetTokens(ctx.Ctx, ctx.Query, a.Medium, a.Address)
 		if err != nil {
 			ts.Fatal(err)
 		}
@@ -30,11 +30,11 @@ func testInvites(t *testing.T, ctx TestContext) {
 	})
 	t.Run("MarkTokensAsSent", func(ts *testing.T) {
 		a := sampleTokens[0]
-		err := MarkTokensAsSent(ctx.Ctx, ctx.Driver, ctx.Query, a.Medium, a.Address)
+		err := MarkTokensAsSent(ctx.Ctx, ctx.Query, a.Medium, a.Address)
 		if err != nil {
 			ts.Fatal(err)
 		}
-		tkn, err := GetTokens(ctx.Ctx, ctx.Driver, ctx.Query, a.Medium, a.Address)
+		tkn, err := GetTokens(ctx.Ctx, ctx.Query, a.Medium, a.Address)
 		if err != nil {
 			ts.Fatal(err)
 		}

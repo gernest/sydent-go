@@ -15,9 +15,8 @@ import (
 )
 
 type TestContext struct {
-	Ctx    context.Context
-	Driver Driver
-	Query  models.Query
+	Ctx   context.Context
+	Query models.Query
 }
 
 func TestGenValues(t *testing.T) {
@@ -45,14 +44,10 @@ func TestIdentity(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Close()
-	drv, err := NewDriver(driverName)
-	if err != nil {
-		t.Fatal(err)
-	}
+
 	tctx := TestContext{
-		Ctx:    context.Background(),
-		Driver: drv,
-		Query:  query.New(db),
+		Ctx:   context.Background(),
+		Query: query.New(db),
 	}
 	fs := embed.New()
 

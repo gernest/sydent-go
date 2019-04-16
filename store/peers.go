@@ -4,11 +4,12 @@ import (
 	"context"
 
 	"github.com/gernest/sydent-go/models"
+	"github.com/gernest/sydent-go/store/query"
 )
 
-func GetPeerByName(ctx context.Context, driver Driver, db models.Query, name string) (*models.Peer, error) {
+func GetPeerByName(ctx context.Context, db models.Query, name string) (*models.Peer, error) {
 	var peer models.Peer
-	rows, err := db.QueryContext(ctx, driver.GetPeerByName(), name)
+	rows, err := db.QueryContext(ctx, query.GetPeerByName, name)
 	if err != nil {
 		return nil, err
 	}
@@ -35,8 +36,8 @@ func GetPeerByName(ctx context.Context, driver Driver, db models.Query, name str
 	return &peer, nil
 }
 
-func GetAllPeers(ctx context.Context, driver Driver, db models.Query) ([]models.Peer, error) {
-	rows, err := db.QueryContext(ctx, driver.GetAllPeers())
+func GetAllPeers(ctx context.Context, db models.Query) ([]models.Peer, error) {
+	rows, err := db.QueryContext(ctx, query.GetAllPeers)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +78,9 @@ func GetAllPeers(ctx context.Context, driver Driver, db models.Query) ([]models.
 	return peers, nil
 }
 
-func SetLastSentVersionAndPokeSucceeded(ctx context.Context, driver Driver, db models.Query, peerName, lastSentVersion, lastPokeSucceeded string) error {
-	_, err := db.ExecContext(ctx, driver.SetLastSentVersionAndPokeSucceeded(), lastSentVersion, lastPokeSucceeded, peerName)
+func SetLastSentVersionAndPokeSucceeded(ctx context.Context, db models.Query, peerName, lastSentVersion, lastPokeSucceeded string) error {
+	_, err := db.ExecContext(ctx,
+		query.SetLastSentVersionAndPokeSucceeded,
+		lastSentVersion, lastPokeSucceeded, peerName)
 	return err
 }
