@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -57,35 +56,4 @@ func TestPublicKey(t *testing.T) {
 	if got != expect {
 		t.Errorf("expected %q got %q", expect, got)
 	}
-}
-
-func TestPeers(t *testing.T) {
-	p := []models.Peer{
-		{
-			Name:     "id1.matrixid.org",
-			JSONPort: DefaultReplicationPort,
-			PublicKeys: map[string]string{
-				SIGNING_KEY_ALGORITHM: "key one",
-			},
-		},
-		{
-			Name:     "id2.matrixid.org",
-			JSONPort: DefaultReplicationPort,
-			PublicKeys: map[string]string{
-				SIGNING_KEY_ALGORITHM: "key two",
-			},
-		},
-		{
-			Name:     "id3.matrixid.org",
-			JSONPort: DefaultReplicationPort,
-			PublicKeys: map[string]string{
-				SIGNING_KEY_ALGORITHM: "key three",
-			},
-		},
-	}
-	b, err := json.MarshalIndent(p, "", "  ")
-	if err != nil {
-		t.Fatal(err)
-	}
-	ioutil.WriteFile("tmp/peers.json", b, 0600)
 }
