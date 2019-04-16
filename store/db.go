@@ -42,7 +42,7 @@ func (m Metric) observe(labelStr string, fn func()) {
 	}
 }
 
-// Identity contains all midentity service database facing routines.
+// Identity contains all identity service database facing routines.
 type Identity struct {
 	db      models.Query
 	metrics Metric
