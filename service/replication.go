@@ -96,7 +96,7 @@ func Replicate(coreContext *core.Ctx, m Metric) echo.HandlerFunc {
 				models.ErrUnknown, "Ooops something went wrong please try again",
 			))
 		}
-		idStore := store.New(tx, db.Driver(), db.Metric())
+		idStore := store.New(tx, db.Metric())
 		for _, a := range o.SignedAssociations {
 			as, err := AssociationFromMap(a.SignedAssociation)
 			if err != nil {

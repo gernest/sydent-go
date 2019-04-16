@@ -13,8 +13,8 @@ import (
 	"github.com/gernest/sydent-go/store"
 	"github.com/prometheus/client_golang/prometheus"
 
-	"github.com/gernest/sydent-go/embed"
 	"github.com/gernest/sydent-go/core"
+	"github.com/gernest/sydent-go/embed"
 	"github.com/gernest/sydent-go/logger"
 	"github.com/gernest/sydent-go/store/query"
 	"github.com/gernest/sydent-go/store/schema"
@@ -80,15 +80,11 @@ func id() cli.Command {
 			}
 			vfs := embed.New()
 			sq := query.New(db)
-			driver, err := store.NewDriver(c.DB.Driver)
-			if err != nil {
-				return err
-			}
 			storeMetrics := store.NewMetric(prometheus.Opts{
 				Namespace: "matrix",
 				Subsystem: "storage",
 			})
-			storage := store.NewStore(sq, driver, storeMetrics)
+			storage := store.NewStore(sq, storeMetrics)
 			err = schema.IdentityUp(context.Background(), vfs, storage.DB())
 			if err != nil {
 				return err
