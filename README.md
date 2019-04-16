@@ -16,3 +16,14 @@ sysent-go is a port of [sydent]() which is a reference implementation of the ide
 - heavily instrumented (exports lots of metrics about the running service)
 - i18n aware , you can help translate the email messages
 - Single binary etc
+
+
+## Installation
+
+### install from source
+
+You need `go1.12+`
+
+```
+go install github.com/gernest/sydent-go
+```
