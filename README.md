@@ -122,6 +122,11 @@ Configures the webserver.
 
 This is the name that identifies this service. Note that this is very important because it is used to sign the mappings. 
 
+##### `name`
+
+The port number to bind the service to
+
+
 ##### `client_http_base`
 
 This is the base url `http[s]://host:port` that can be used by clients to reach this service. It is used mainle in the emails sent with links for verification/validation that needs to point back to this service. It should be resolvable to the host running this service.
