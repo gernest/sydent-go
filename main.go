@@ -24,9 +24,12 @@ import (
 	"github.com/urfave/cli"
 )
 
+var version string
+
 func main() {
 	app := cli.NewApp()
 	app.Name = config.ApplicationName
+	app.Version = version
 	app.Usage = "matrix identity service in Go"
 	app.Commands = []cli.Command{id()}
 	err := app.Run(os.Args)
