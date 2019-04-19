@@ -29,9 +29,9 @@ const ApplicationName = "sydent-go"
 
 // AgentName the name used for User-Agent header. All http clients making
 // requests between matrix serves include this header.
-const AgentName = "matrixid"
+const AgentName = "sydent-go"
 
-// MaxRetries is the maximum number of retries for http requests made by matrixid
+// MaxRetries is the maximum number of retries for http requests made by SYDENT
 // clients before backing off.
 const MaxRetries = 16
 
@@ -537,13 +537,13 @@ func Sample() *Matrix {
 			Crypto: Crypto{
 				Algorithm:  "ed25519",
 				Version:    "0",
-				SingingKey: "${MATRIXID_PRIVATE_KEY}",
-				VerifyKey:  "${MATRIXID_PUBLIC_KEY}",
+				SingingKey: "${SYDENT_PRIVATE_KEY}",
+				VerifyKey:  "${SYDENT_PUBLIC_KEY}",
 			},
 		},
 		DB: DB{
 			Driver: "postgres",
-			Conn:   "${MATRIXID_DB_CONN}",
+			Conn:   "${SYDENT_DB_CONN}",
 		},
 		Email: Email{
 			Providers: []Provider{
@@ -551,26 +551,26 @@ func Sample() *Matrix {
 					Name:  "smtp",
 					State: "enabled",
 					Settings: map[string]interface{}{
-						"host":     "$MATRIXID_SMTP_HOST",
-						"port":     "$MATRIXID_SMTP_PORT",
-						"username": "$MATRIXID_SMTP_USERNAME",
-						"password": "$MATRIXID_SMTP_PASSWORD",
+						"host":     "$SYDENT_SMTP_HOST",
+						"port":     "$SYDENT_SMTP_PORT",
+						"username": "$SYDENT_SMTP_USERNAME",
+						"password": "$SYDENT_SMTP_PASSWORD",
 					},
 				},
 				{
 					Name:  "sendgrid",
 					State: "disabled",
 					Settings: map[string]interface{}{
-						"api_key": "$MATRIXID_SENDGRID_APIKEY",
+						"api_key": "$SYDENT_SENDGRID_APIKEY",
 					},
 				},
 			},
 			Invite: Invite{
-				From:     "$MATRIXID_SMTP_USERNAME",
+				From:     "$SYDENT_SMTP_USERNAME",
 				Template: "invite",
 			},
 			Verification: Verification{
-				From:         "$MATRIXID_SMTP_USERNAME",
+				From:         "$SYDENT_SMTP_USERNAME",
 				Template:     "verification",
 				ResponsePage: "verify_response",
 			},
