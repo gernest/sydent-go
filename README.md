@@ -93,3 +93,13 @@ email {
   }
 }
 ```
+
+#### `mode`
+
+This defines how the service is run. The values are 
+
+- `prod` if the service is running in production 
+- `dev` if the service is running in development.
+
+The value is used to determine the amount of logging and certain features, for
+instance it doesnt make sense to instrument a development service. So instrumentation will be off when in `dev` mode.
