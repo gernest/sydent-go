@@ -25,7 +25,7 @@ import (
 )
 
 // ApplicationName the name of the application.
-const ApplicationName = "matrixid"
+const ApplicationName = "sydent-go"
 
 // AgentName the name used for User-Agent header. All http clients making
 // requests between matrix serves include this header.

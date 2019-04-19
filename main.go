@@ -26,7 +26,7 @@ import (
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "sydent-go"
+	app.Name = config.ApplicationName
 	app.Usage = "matrix identity service in Go"
 	app.Commands = []cli.Command{id()}
 	err := app.Run(os.Args)
@@ -38,8 +38,8 @@ func main() {
 
 func id() cli.Command {
 	return cli.Command{
-		Name:  "id",
-		Usage: "high performance matrix identity service",
+		Name:  "serve",
+		Usage: "starts the identity service server",
 		Action: func(ctx *cli.Context) error {
 			file := ctx.Args().First()
 			var c *config.Matrix
@@ -58,7 +58,7 @@ func id() cli.Command {
 			}
 
 			if config.Empty(c) {
-				return errors.New(missingConfigNotice)
+				return errors.New("missing configuration file")
 			}
 
 			lg, err := logger.New()
@@ -96,22 +96,9 @@ func id() cli.Command {
 			opts.Email = mail
 			opts.Store = storage
 			m := service.NewMetric()
-			e := service.Service(opts.Namespace("matrixid"), m)
+			e := service.Service(opts.Namespace(config.ApplicationName), m)
 			lg.Info("statring matrix identity service", zap.String("address", c.Server.Address()))
 			return http.ListenAndServe(c.Server.Address(), e)
 		},
 	}
 }
-
-const missingConfigNotice = `Can't find configuration for starting this service
-
-You can pass configuration file path as the first argument fot matrixid command like
-	matrixid path/to/config.hcl
-
-Or you can use environment variables eg
-	MX_MODE=prod matrixid
-
-Note that you can't mix, you can only apply one configuration i.e either file or 
-environment variable but never both. If you use file, environment variables will
-be ignored.
-`
