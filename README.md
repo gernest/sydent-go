@@ -103,3 +103,12 @@ This defines how the service is run. The values are
 
 The value is used to determine the amount of logging and certain features, for
 instance it doesnt make sense to instrument a development service. So instrumentation will be off when in `dev` mode.
+
+#### `db`
+
+Setup database connection. We are using postgres by default because that is the
+only database we support for now.
+
+- `driver` - the database driver to use , defaults to `postgres`
+- `conn` - connection string to use to connect to the database
+
