@@ -156,11 +156,8 @@ func NewTestCtx(m store.Metric) (*core.Ctx, error) {
 	if err != nil {
 		return nil, err
 	}
-	drv, err := store.NewDriver("postgres")
-	if err != nil {
-		return nil, err
-	}
-	db := store.NewStore(query.New(sqlConn), drv, m)
+
+	db := store.NewStore(query.New(sqlConn), m)
 	return &core.Ctx{
 		Config: c,
 		Store:  db,
