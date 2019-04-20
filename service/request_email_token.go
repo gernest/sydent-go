@@ -35,9 +35,13 @@ func RequestEmailToken(ctx context.Context, coreContext *core.Ctx, req *TokenReq
 		return session.ID, nil
 	}
 	clientHTTPBase := coreContext.Config.Server.ClientHTTPBase
+	link, err := makeValidateLink(clientHTTPBase, session, req.ClientSecret, req.NextLink)
+	if err != nil {
+		return 0, err
+	}
 	data := map[string]string{
 		"ipaddress": req.IP.String(),
-		"link":      makeValidateLink(clientHTTPBase, session, req.ClientSecret, req.NextLink),
+		"link":      link,
 		"token":     session.Token,
 	}
 	err = coreContext.Email.SendMail(ctx, verifyTpl,
@@ -54,11 +58,22 @@ func RequestEmailToken(ctx context.Context, coreContext *core.Ctx, req *TokenReq
 	return session.ID, nil
 }
 
-func makeValidateLink(clientHTTPBase string, session *models.ValidationSession, clientSecret, nextLink string) string {
+func makeValidateLink(clientHTTPBase string, session *models.ValidationSession, clientSecret, nextLink string) (string, error) {
 	link := fmt.Sprintf("%s/_matrix/identity/api/v1/validate/email/submitToken", clientHTTPBase)
 	q := make(url.Values)
 	q.Set("token", session.Token)
 	q.Set("client_secret", clientSecret)
-	q.Set("sid", fmt.Sprint(session.ID))
-	return link + "?" + q.Encode()
+	sid := fmt.Sprint(session.ID)
+	q.Set("sid", sid)
+	if nextLink != "" {
+		u, err := url.Parse(nextLink)
+		if err != nil {
+			return "", err
+		}
+		nq := u.Query()
+		nq.Set("sid", sid)
+		u.RawQuery = nq.Encode()
+		q.Set("nextLink", u.String())
+	}
+	return link + "?" + q.Encode(), nil
 }
