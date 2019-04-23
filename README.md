@@ -16,6 +16,9 @@ sysent-go is a port of [sydent]() which is a reference implementation of the ide
 - i18n aware , you can help translate the email messages
 - Single binary etc
 
+## Project Status
+This is a work in progress, please do not use it yet. Initial implementation is almost done
+however there are very few tests, stay tuned we will eventually get there.
 
 ## Installation
 
